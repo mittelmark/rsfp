@@ -1,7 +1,7 @@
 ---
 title: rsfp - R single file package
 author: Detlef Groth
-date: 2024-08-29 08:31
+date: 2024-08-29 08:33
 include-before: |
     <style>
     body { max-width: 1000px; font-family: Candara, sans-serif; }
@@ -28,10 +28,12 @@ R CMD INSTALL PACKAGENAME_VERSION.tar.gz
 Have a look at the [Makefile](Makefile)  which can be used if the tool Make is
 installed. 
 
+<center>
 ![Diagram](https://kroki.io/graphviz/svg/eNqVUl1rwjAUffdXlD5t0FbG8Ek6EO2DoE6ibzJG2tx-0JiUJCJO_O9L07TWMjbWviTnnHs49-aSIhO4yh3kXEeO_hgncJA5riBkXIEn1YVCmBaUAvESTrkIJaZHzrxzQVQevgSTD1MoZJU6_psj4-JAcQw0dH2fwdmvcFLiDJwnzhJ4dhu1VlkxKcRdXwmegJRamypgPbFW1frNbB3ttrN5NMAX0W6Oltv98n0zYI6YITLAEBoC2zLrmmjTCJlWvhRJgO4xWk4fLeU1s3LrYT3E7UnHnSrllICwOhOtlenLOD0xbUksjVDLIcu0hE7bhRxr_44xjnVD8amg5NC8HeFKAWkE3fx-E9X-v_EGrwVJDklpIHOqoYJJhSk1IJBCcWGf2SBXR2BW6gU6wrSlp2YXbr2KtrfI3Nx268pLTE_Qi9CNx5mvFzaV9nLtZr4Gk59KTdTH0ia9Lv1kQf0rLILs6w8f2-mj03Kz289Wq_94jUa3b_heGV8=)
 
 [Edit                                                                     this
 diagram](https://niolesk.top/#https://kroki.io/graphviz/svg/eNqVUl1rwjAUffdXlD5t0FbG8Ek6EO2DoE6ibzJG2tx-0JiUJCJO_O9L07TWMjbWviTnnHs49-aSIhO4yh3kXEeO_hgncJA5riBkXIEn1YVCmBaUAvESTrkIJaZHzrxzQVQevgSTD1MoZJU6_psj4-JAcQw0dH2fwdmvcFLiDJwnzhJ4dhu1VlkxKcRdXwmegJRamypgPbFW1frNbB3ttrN5NMAX0W6Oltv98n0zYI6YITLAEBoC2zLrmmjTCJlWvhRJgO4xWk4fLeU1s3LrYT3E7UnHnSrllICwOhOtlenLOD0xbUksjVDLIcu0hE7bhRxr_44xjnVD8amg5NC8HeFKAWkE3fx-E9X-v_EGrwVJDklpIHOqoYJJhSk1IJBCcWGf2SBXR2BW6gU6wrSlp2YXbr2KtrfI3Nx268pLTE_Qi9CNx5mvFzaV9nLtZr4Gk59KTdTH0ia9Lv1kQf0rLILs6w8f2-mj03Kz289Wq_94jUa3b_heGV8=)
+</center>
 
 ## EXAMPLE
 
