@@ -1,7 +1,7 @@
 ##-*- makefile -*-############################################################
 #  Created By    : Detlef Groth, University of Potsdam
 #  Created       : Wed Aug 28 16:08:38 2024
-#  Last Modified : <240829.0855>
+#  Last Modified : <240829.1239>
 #
 #  Description	 : Makefile for creating packages from the sfrp-src.R script
 #
@@ -19,12 +19,18 @@ help:
 	@printf "Usage:\n"
 	@printf "   make new\n      for creating a single file package (default) sbi\n"
 	@printf "   make new pkg=xyz\n     for creating a single file package named xyz\n"
-	@printf "   make package pkg=sbi\n      for creating a true R package named xyz\n" 
+	@printf "   make build pkg=xyz\n      for creating a true R package named xyz\n" 
+	@printf "   make install pkg=xyz\n      for creating a true R package named xyz\n" 	
 new:
 	Rscript rsfp-src.R --new-package $(pkg)
-package:
+build:
 	Rscript $(pkg)-src.R --process $(pkg)-src.R
-	R CMD build $(pkg)
-	R CMD check $(pkg)_$(VERSION).tar.gz
-	
+	Rscript $(pkg)-src.R --build $(pkg)
+	Rscript $(pkg)-src.R --check $(pkg)_$(VERSION).tar.gz
 
+install: build	
+	Rscript $(pkg)-src.R --install $(pkg)_$(VERSION).tar.gz
+
+clean:
+	-rm -rf $(pkg)/
+	-rm -rf $(pkg).Rcheck

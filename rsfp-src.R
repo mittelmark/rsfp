@@ -101,7 +101,7 @@
 #' }
 #' \section{Methods}{ 
 #' \itemize{ 
-#' \item \code{\link[rsfp:rsfp_add]{rsfp$add(x,y)}}{add two numbers}
+#' \item \code{\link[rsfp:rsfp_add]{rsfp$add(x,y)}} add two numbers
 #' }
 #' } 
 #' \examples{ 
@@ -148,6 +148,24 @@ rsfp_add = rsfp$add
 
 #' FILE: EOF
 
+VIGNETTE = "---
+title: %s tutorial
+author: NN
+date: %s
+output:
+   html_document:
+      toc: true
+      theme: null
+      css: mini.css
+vignette: >
+   %%\\VignetteEngine{knitr::rmarkdown}
+   %%\\VignetteIndexEntry{%s tutorial}
+---
+
+## Introduction
+
+"
+
 USAGE = "
 Usage:
 =====
@@ -158,6 +176,7 @@ Usage:
     --help                 - show this help page%s
     --process      SRCFILE - create package structure from the given
                              R package source file
+                             
     --build        PKGDIR  - build a package from the given package dir
     --check        PKGFILE - check the given package file (tar.gz file)
     --install      PKGFILE - install the given package file (tar.gz file)
@@ -186,7 +205,7 @@ Usage:
     
 "
 NP="
---new-package  PKGNAME - create a new PKGNAME-src.R file
+    --new-package  PKGNAME - create a new PKGNAME-src.R file
 "
 
 Usage <- function (argv) {
@@ -238,15 +257,13 @@ Main <- function (argv) {
                 close(fout)
             }
         }
-    } else if ("--build" %in% argv & length(argv) == 3) {
-        library(tools)
-        tools::Rcmd(c("build", argv[3]))
-    } else if ("--check" %in% argv & length(argv) == 3) {
-        library(tools)
-        tools::Rcmd(c("check", argv[3]))
-    } else if ("--install" %in% argv & length(argv) == 3) {
-        library(tools)
-        tools::Rcmd(c("INSTALL", argv[3]))
+        if (!file.exists(sprintf("%s-vignette.Rmd",new_pkgname))) {
+            fout=file(sprintf("%s-vignette.Rmd",new_pkgname),'w')
+            cat(sprintf(VIGNETTE,new_pkgname,Sys.Date(),new_pkgname),file=fout)
+            close(fout)
+        }
+        cat("\nDone!\n\nYou can create a directory structure for your package file like this:\n\n")
+        cat(gsub("rsfp",new_pkgname,sprintf("  Rscript %s --process %s\n",argv[1],argv[1])))
     } else if ("--process" %in% argv & length(argv) > 2) {
         idx=which(argv=="--process")
         rfile = argv[idx+1]
@@ -295,12 +312,26 @@ Main <- function (argv) {
         ## DESCRIPTION, NAMESPACE, LICENSE, NEWS
         ## extract tests/* files
         ## extract inst/files/* files
+        vignette=sprintf("%s-vignette.Rmd",PACKAGE)
+        vigdir  = sprintf("%s/vignettes",PACKAGE)
+        if (file.exists(vignette)) {
+            dir.create(vigdir)
+            file.copy(vignette,vigdir)
+        }
         cat("\nDone!\n\nYou can create and install a package file like this:\n\n")
-        cat(sprintf("  cd %s\n",PACKAGE))
-        cat("  R CMD build .\n")
-        cat(sprintf("  R CMD check %s_%s.tar.gz\n",PACKAGE, VERSION))
-        cat(sprintf("  R CMD INSTALL %s_%s.tar.gz\n\n", PACKAGE, VERSION))
-    } else {
+        cat(sprintf("  Rscript %s --build   %s\n",argv[1],PACKAGE))
+        cat(sprintf("  Rscript %s --check   %s_%s.tar.gz\n",argv[1], PACKAGE, VERSION))
+        cat(sprintf("  Rscript %s --install %s_%s.tar.gz\n\n", argv[1], PACKAGE, VERSION))
+    } else if ("--build" %in% argv & length(argv) == 3) {
+        library(tools)
+        tools::Rcmd(c("build", argv[3]))
+    } else if ("--check" %in% argv & length(argv) == 3) {
+        library(tools)
+        tools::Rcmd(c("check", argv[3]))
+    } else if ("--install" %in% argv & length(argv) == 3) {
+        library(tools)
+        tools::Rcmd(c("INSTALL", argv[3]))
+    }  else {
         Usage(argv)
     }
 }

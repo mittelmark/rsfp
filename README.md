@@ -23,9 +23,9 @@ Rscript rsfp-src.R --new-package PACKAGENAME
 ### Create the package files 
 Rscript PACKAGENAME-src.R --process
 ### Build, check and install the package
-R CMD build PACKAGENAME
-R CMD check PACKAGENAME_VERSION.tar.gz
-R CMD INSTALL PACKAGENAME_VERSION.tar.gz
+Rscript PACKAGENAME-src.R --build   PACKAGENAME
+Rscript PACKAGENAME-src.R --check   PACKAGENAME_VERSION.tar.gz
+Rscript PACKAGENAME-src.R --install PACKAGENAME_VERSION.tar.gz
 ```
 
 Have a look at the [Makefile](Makefile)  which can be used if the tool Make is
@@ -38,14 +38,17 @@ Let's create a package called `sbi`.
 ```
 ### creating a file sbi-src.R
 Rscript rsfp-src.R --new-package sbi
-### Edit this file with your editor like me == MicroEmacs
+### Edit this file with your editor like me/geany/vim
+### Change the author and the package title for now
 me sbi-src.R
 ### creating the package structure in sbi folder
-Rscript sbi-src.R --process 
+Rscript sbi-src.R --process sbi
 ### processing the package code into a installable package
-R CMD build sbi
-R CMD check sbi_0.0.1.tar.gz
-R CND INSTALL sbi_0.0.1.tar.gz
+Rscript sbi-src.R --build sbi
+### testing it
+Rscript sbi-src.R --check sbi_0.0.1.tar.gz
+### installing it
+Rscript sbi-src.R --install sbi_0.0.1.tar.gz
 ```
 
 Here is the process visualized:
@@ -63,13 +66,13 @@ This process can be as well done within a R console like this:
 > Main(c("rsfp-src.R","--new-package","sbi"))
 > ## the lines below will be done again and again in development
 > ## add your functions to the file sbi-src.R in your editor
-> Main("sbi-src.R","--process","sbi-src.R")
-> tools::Rcmd(c("build", "sbi"))
-> tools::Rcmd(c("check", "sbi_0.0.1.tar.gz"))
+> Main(c("sbi-src.R","--process","sbi-src.R"))
+> Main(c("sbi-src.R","--build","sbi"))
+> Main(c("sbi-src.R","--check","sbi_0.0.1.tar.gz"))
 > ## add more functions, fix errors in your editor
-> setwd("..")
-> Main("sbi-src.R","--process","sbi-src.R")
-> setwd("sbi") ### etc
+> ## then rebuld everything
+> Main(c("sbi-src.R","--process","sbi-src.R"))
+> ### etc
 ```
 
 ## DESCRIPTION
@@ -107,6 +110,9 @@ add <- function (x,y) {
 }
 ...
 ```
+
+## VIGNETTES 
+
 
 ## BACKGROUND
 
