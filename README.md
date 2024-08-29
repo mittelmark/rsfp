@@ -120,7 +120,10 @@ automatically a package vignette file created which is called
 the package. During the package build procedure using the `--build` option
 this file is automatically copied to the package vignettes folder. If you
 prefere to use an other name you just manually copy this file between calling
-`--process` and `--build` this file to the vignette folder.
+`--process` and `--build` this file to the vignette folder. Please note that
+for this going to work you must have the knitr package available and pandoc
+must be installed.
+
 
 ## BACKGROUND
 
