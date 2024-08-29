@@ -1,32 +1,15 @@
 ##-*- makefile -*-############################################################
-#
-#  System        : 
-#  Module        : 
-#  Object Name   : $RCSfile$
-#  Revision      : $Revision$
-#  Date          : $Date$
-#  Author        : $Author$
-#  Created By    : Detlef Groth
+#  Created By    : Detlef Groth, University of Potsdam
 #  Created       : Wed Aug 28 16:08:38 2024
-#  Last Modified : <240829.0851>
+#  Last Modified : <240829.0855>
 #
-#  Description	
-#
-#  Notes
-#
-#  History
-#	
-#  $Log$
+#  Description	 : Makefile for creating packages from the sfrp-src.R script
 #
 ##############################################################################
 #
-#  Copyright (c) 2024 Detlef Groth.
+#  Copyright (c) 2024 Detlef Groth, University of Potsdam
 # 
-#  All Rights Reserved.
-# 
-#  This  document  may  not, in  whole  or in  part, be  copied,  photocopied,
-#  reproduced,  translated,  or  reduced to any  electronic  medium or machine
-#  readable form without prior written consent from Detlef Groth.
+#  MIT-License - see the file LICENSE in this folder
 #
 ##############################################################################
 
