@@ -113,7 +113,14 @@ add <- function (x,y) {
 
 ## VIGNETTES 
 
-Vignettes are tutorial on how to use a package.
+Vignettes are tutorial on how to use a package. If the user calls the the
+`rsfp-src.R` script with the `--new-package` function there will be
+automatically a package vignette file created which is called
+`PACKAGENAME-vignette.Rmd`. In this the user can write a litte tutorial for
+the package. During the package build procedure using the `--build` option
+this file is automatically copied to the package vignettes folder. If you
+prefere to use an other name you just manually copy this file between calling
+`--process` and `--build` this file to the vignette folder.
 
 ## BACKGROUND
 
