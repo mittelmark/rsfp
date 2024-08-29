@@ -160,6 +160,23 @@ output:
 vignette: >
    %%\\VignetteEngine{knitr::rmarkdown}
    %%\\VignetteIndexEntry{%s tutorial}
+include-before: |
+    <style>
+    body { max-width: 900px; font-family: Candara, sans-serif; padding: 1em; margin: auto;}
+    pre  { font-family: Consolas; monospaced; }
+    pre, blockquote pre, #TOC {
+        font-size: 80%;
+        border-top:    0.1em #9ac solid;
+        border-bottom: 0.1em #9ac solid;
+    }
+    table { min-width: 400px; border-spacing: 5px;  border-collapse: collapse; }
+    .title, .author, .date { text-align: center ; }
+    #TOC > ul { margin-left: -20px;  list-style-type: square ; }
+    a { color: #0655cc; text-decoration: none; }
+    a:visited { color: #5506cc; }
+    a:hover { color: #cc5506; }    
+    </style>
+    <center>some links on top</center>
 ---
 
 ## Introduction
