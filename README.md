@@ -1,7 +1,7 @@
 ---
 title: rsfp - R single file package
 author: Detlef Groth
-date: 2024-08-29 08:43
+date: 2024-08-29 09:49
 include-before: |
     <style>
     body { max-width: 1000px; font-family: Candara, sans-serif; }
@@ -13,13 +13,16 @@ include-before: |
 
 ## NAME
 
-__rsfp__ - build R packages from only one file.
+__rsfp__ - build R packages from only one file
  
 ## SYNOPSIS
 
-```
+```.bash
+### create a new R single file package
 Rscript rsfp-src.R --new-package PACKAGENAME
+### Create the package files 
 Rscript PACKAGENAME-src.R --process
+### Build, check and install the package
 R CMD build PACKAGENAME
 R CMD check PACKAGENAME_VERSION.tar.gz
 R CMD INSTALL PACKAGENAME_VERSION.tar.gz

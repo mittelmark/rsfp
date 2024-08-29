@@ -148,14 +148,62 @@ rsfp_add = rsfp$add
 
 #' FILE: EOF
 
+USAGE = "
+Usage:
+=====
+  %s [OPTIONS] [PKGNAME|SRCFILE|PKGDIR|PKGFILE]
+
+  OPTIONS
+
+    --help                 - show this help page%s
+    --process      SRCFILE - create package structure from the given
+                             R package source file
+    --build        PKGDIR  - build a package from the given package dir
+    --check        PKGFILE - check the given package file (tar.gz file)
+    --install      PKGFILE - install the given package file (tar.gz file)
+    
+  ARGUMENTS
+  
+    PKGNAME - the name of a new package, name should only consist of
+              letters and numbers
+    SRCFILE - a R package source file like sbi-src.R
+    PKGDIR  - the directory containing the package files created
+    PKGFILE - the package tar.gz file made from the --build argument
+    
+  AUTHOR
+  
+    Detlef Groth, University of Potsdam  
+    
+  HELP     
+  
+    Use the issue tracker at Github https://github.com/mittelmark/rsfp/issues
+  
+  LICENSE and COPYRIGHT
+  
+    Copyright : 2024 - Detlef Groth, University of Potsdam  
+    License   : See the file LICENSE
+    
+    
+"
+NP="
+--new-package  PKGNAME - create a new PKGNAME-src.R file
+"
+
 Usage <- function (argv) {
-    cat(sprintf("Usage: %s ( --process FILENAME | --new-package PACKAGENAME )",
-                argv[1]))
+    if (!grepl("rsfp-src.",argv[1])) {
+        help=sprintf(USAGE,argv[1],"")
+    } else {
+        help=sprintf(USAGE,argv[1],NP)
+    }
+    cat(help)
 }
 Main <- function (argv) {
     VERSION=""
     PACKAGE=""
-    if ("--new-package" %in% argv & length(argv) == 3) {
+    if ("--help" %in% argv) {
+        Usage(argv)
+        
+    } else if ("--new-package" %in% argv & length(argv) == 3) {
         if (!grepl("rsfp",argv[1])) {
             cat("Error: Only the file rspf-src.R can be used to create new packages!\n")
             return()
@@ -190,6 +238,15 @@ Main <- function (argv) {
                 close(fout)
             }
         }
+    } else if ("--build" %in% argv & length(argv) == 3) {
+        library(tools)
+        tools::Rcmd(c("build", argv[3]))
+    } else if ("--check" %in% argv & length(argv) == 3) {
+        library(tools)
+        tools::Rcmd(c("check", argv[3]))
+    } else if ("--install" %in% argv & length(argv) == 3) {
+        library(tools)
+        tools::Rcmd(c("INSTALL", argv[3]))
     } else if ("--process" %in% argv & length(argv) > 2) {
         idx=which(argv=="--process")
         rfile = argv[idx+1]

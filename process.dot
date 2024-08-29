@@ -1,0 +1,28 @@
+digraph R {
+    node[shape=note,style=filled,color=salmon,width=1.5]
+    rspf -> sbi[label="--new-package (once)"]
+    sbi -> sbidir[label="--process (often)"]
+    sbidir -> NAMESPACE
+    sbidir -> DESCRIPTION
+    sbidir -> manRd
+    sbidir -> RR
+    sbidir -> RPkg
+    rspf[label="rsfp-src.R"]
+    sbi[label="sbi-src.R",shape="note"]
+    sbidir[label="sbi/",shape="folder"]
+    manRd[label="man/func.Rd"]
+    RR[label="R/func.R"]
+    RPkg[label="r/sbi.R"]
+    manRd -> build[style=dotted]
+    NAMESPACE -> build[style=dotted]
+    RPkg -> build[style=dotted]
+    build -> check
+    check -> install
+    editor -> sbi
+    { rank=same; editor ; sbi }
+    editor[label="Editor",color=skyblue,shape=box]
+    build[label="R CMD build sbi",width=3.5,color=skyblue,shape=box]
+    check[label="R CMD check sbi_n.n.n.tar.gz",width=3.5,color=skyblue,shape=box]
+    install[label="R CMD INSTALL sbi_n.n.n.tar.gz",width=3.5,color=skyblue,shape=box]
+}
+ 
