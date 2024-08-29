@@ -8,7 +8,7 @@
 #  Author        : $Author$
 #  Created By    : Detlef Groth
 #  Created       : Wed Aug 28 16:08:38 2024
-#  Last Modified : <240828.1626>
+#  Last Modified : <240829.0851>
 #
 #  Description	
 #
@@ -30,11 +30,18 @@
 #
 ##############################################################################
 
-pkg=rsfp
-VERSION=$(shell grep -Eo "^#' Version: [.0-9]+" *-src.R | sed -E 's/.+: //g; s/ //g;')
-default:
+pkg=sbi
+VERSION=$(shell grep -Eo "^#' Version: [.0-9]+" $(pkg)-src.R | sed -E 's/.+: //g; s/ //g;')
+help:
+	@printf "Usage:\n"
+	@printf "   make new\n      for creating a single file package (default) sbi\n"
+	@printf "   make new pkg=xyz\n     for creating a single file package named xyz\n"
+	@printf "   make package pkg=sbi\n      for creating a true R package named xyz\n" 
+new:
+	Rscript rsfp-src.R --new-package $(pkg)
+package:
 	Rscript $(pkg)-src.R --process $(pkg)-src.R
-	cd $(pkg) && R CMD build .
-	cd $(pkg) && R CMD check $(pkg)_$(VERSION).tar.gz
+	R CMD build $(pkg)
+	R CMD check $(pkg)_$(VERSION).tar.gz
 	
 
