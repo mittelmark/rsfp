@@ -1,3 +1,4 @@
+#!/usr/bin/env Rscript
 #' FILE: rsfp/DESCRIPTION
 #' Package: rsfp
 #' Type: Package
@@ -147,10 +148,49 @@ rsfp_add = rsfp$add
 
 #' FILE: EOF
 
+Usage <- function (argv) {
+    cat(sprintf("Usage: %s ( --process FILENAME | --new-package PACKAGENAME )",
+                argv[1]))
+}
 Main <- function (argv) {
     VERSION=""
     PACKAGE=""
-    if ("--process" %in% argv & length(argv) > 2) {
+    if ("--new-package" %in% argv & length(argv) == 3) {
+        if (!grepl("rsfp",argv[1])) {
+            cat("Error: Only the file rspf-src.R can be used to create new packages!\n")
+            return()
+        }
+        idx=which(argv=="--new-package") ;
+        if (idx != 2) {
+            Usage(argv)
+        } else {
+            new_pkgname = argv[3]
+            if (!grepl("^[a-zA-Z][A-Za-z0-9]{2,}$",new_pkgname)) {
+                cat("Error: The package name should only consist of numbers and letters!\n")
+            } else {
+                fin = file(argv[1],'r')
+                outname = paste(new_pkgname,"-src.R",sep="")
+                if (file.exists(outname)) {
+                    cat(sprintf("Error: File '%s' already exists, remove if you like to create a new package!\n",outname))
+                    return()
+                }
+                fout = file(outname,'w')
+                main = FALSE
+                while(length((line = readLines(fin,n=1)))>0) {
+                    if (grepl("^#' +FILE: +EOF",line)) {
+                        main = TRUE      
+                    } 
+                    if (main) {
+                        cat(sprintf("%s\n",line),file=fout)
+                    } else {
+                        cat(sprintf("%s\n",gsub("rsfp",new_pkgname,line)),file=fout)
+                    }
+                }
+                close(fin)
+                close(fout)
+            }
+        }
+    } else if ("--process" %in% argv & length(argv) > 2) {
         idx=which(argv=="--process")
         rfile = argv[idx+1]
         if (!file.exists(rfile)) {
@@ -161,7 +201,7 @@ Main <- function (argv) {
         fout = NULL
         while(length((line = readLines(fin,n=1)))>0) {
             if (grepl("^#' +FILE:",line)) {
-                f = gsub("#' +FILE: +([^\\s]+)","\\1",line)
+                f = gsub("#' +FILE: +([^ ]+)","\\1",line)
                 if (!is.null(fout)) {
                     close(fout)
                     fout = NULL
@@ -204,7 +244,7 @@ Main <- function (argv) {
         cat(sprintf("  R CMD check %s_%s.tar.gz\n",PACKAGE, VERSION))
         cat(sprintf("  R CMD INSTALL %s_%s.tar.gz\n\n", PACKAGE, VERSION))
     } else {
-        print(sprintf("Usage: %s --process R-file",argv[1]))
+        Usage(argv)
     }
 }
 if (sys.nframe() == 0L && !interactive()) {

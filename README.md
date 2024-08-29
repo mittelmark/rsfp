@@ -1,7 +1,7 @@
 ---
 title: rsfp - R single file package
 author: Detlef Groth
-date: 2024-08-28 19:11
+date: 2024-08-29 04:50
 include-before: |
     <style>
     body { max-width: 1000px; font-family: Candara, sans-serif; }
@@ -18,11 +18,33 @@ __rsfp__ - build R packages from only one file.
 ## SYNOPSIS
 
 ```
-Rscript rsfp-src.R
-cd rsfp 
+Rscript rsfp-src.R --new-package PACKAGENAME
+Rscript PACKAGENAME-src.R --process
+cd PACKAGENAME 
 R CMD build .
-R CMD check rsfp_0.0.1.tar.gz
-R CND INSTALL rsfp_0.0.1.tar.gz
+R CMD check PACKAGENAME_VERSION.tar.gz
+R CMD INSTALL PACKAGENAME_VERSION.tar.gz
+```
+
+Have a look at the [Makefile](Makefile)  which can be used if the tool Make is
+installed. 
+
+## EXAMPLE
+
+Let's create a package called `sbi`.
+
+```
+### creating a file sbi-src.R
+Rscript rsfp-src.R --new-package sbi
+### Edit this file with your editor like me == MicroEmacs
+me sbi-src.R
+### creating the package structure in sbi folder
+Rscript sbi-src.R --process 
+### processing the package code into a installable package
+cd sbi 
+R CMD build .
+R CMD check sbi_0.0.1.tar.gz
+R CND INSTALL sbi_0.0.1.tar.gz
 ```
 
 ## DESCRIPTION
@@ -34,7 +56,7 @@ has FILE marks  embedded  with the source  file to  indicate  where a new file
 starts.  During  processing  these  files are  created in the current  working
 directory.
 
-```{R}
+```{.r}
 #' FILE: rsfp/DESCRIPTION
 #' Package: rsfp
 #' Type: Package
@@ -60,6 +82,7 @@ add <- function (x,y) {
 }
 ...
 ```
+
 ## BACKGROUND
 
 Creating  R  packages  is a  laborius  approach.  You  need to have a  certain
@@ -85,7 +108,12 @@ Rscript rsfp-src.R --new-package sbi
 
 This will create a file  `sbi-src.R` in the current  folder which is a copy of
 the file  `rsfp-src.R`  but with all  appearances  of the string "rsfp" replaced
-with the string "sbi" - the new package name string.
+with the string  "sbi" - the new  package  name  string. You can then add your
+code  to  the  file  `sbi-src.R`  and  remove  the  example  function(s)  like
+`sbi_add`.  Please  note,  that  all  functions  in  this  file  belong  to an
+environment  object,  called  `sbi`,  like the  package  name.  This  allows a
+flexible export of all functions for instance into a RDS file.
+
 
 
 
