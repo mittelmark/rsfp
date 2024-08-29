@@ -113,6 +113,7 @@ add <- function (x,y) {
 
 ## VIGNETTES 
 
+Vignettes are tutorial on how to use a package.
 
 ## BACKGROUND
 
