@@ -165,7 +165,7 @@ include-before: |
     body { max-width: 900px; font-family: Candara, sans-serif; padding: 1em; margin: auto;}
     pre  { font-family: Consolas; monospaced; }
     pre, blockquote pre, #TOC {
-        font-size: 80%;
+        font-size: 80%%;
         border-top:    0.1em #9ac solid;
         border-bottom: 0.1em #9ac solid;
     }
@@ -186,7 +186,7 @@ include-before: |
 USAGE = "
 Usage:
 =====
-  %s [OPTIONS] [PKGNAME|SRCFILE|PKGDIR|PKGFILE]
+  %s [OPTIONS] [PKGNAME|SRCFILE|PKGDIR|RDFILE|PKGFILE]
 
   OPTIONS
 
@@ -196,6 +196,7 @@ Usage:
                              
     --build        PKGDIR  - build a package from the given package dir
     --check        PKGFILE - check the given package file (tar.gz file)
+    --doc          RDFILE  - an Rd file usually from the man folder
     --install      PKGFILE - install the given package file (tar.gz file)
     
   ARGUMENTS
@@ -204,6 +205,7 @@ Usage:
               letters and numbers
     SRCFILE - a R package source file like sbi-src.R
     PKGDIR  - the directory containing the package files created
+    RDFILE  - a documentation file in R-Docu format (Rdoc)
     PKGFILE - the package tar.gz file made from the --build argument
     
   AUTHOR
@@ -332,7 +334,9 @@ Main <- function (argv) {
         vignette=sprintf("%s-vignette.Rmd",PACKAGE)
         vigdir  = sprintf("%s/vignettes",PACKAGE)
         if (file.exists(vignette)) {
-            dir.create(vigdir)
+            if (!dir.exists(vigdir)) {
+                dir.create(vigdir)
+            }
             file.copy(vignette,vigdir)
         }
         cat("\nDone!\n\nYou can create and install a package file like this:\n\n")
@@ -348,7 +352,15 @@ Main <- function (argv) {
     } else if ("--install" %in% argv & length(argv) == 3) {
         library(tools)
         tools::Rcmd(c("INSTALL", argv[3]))
-    }  else {
+    }  else if ("--doc" %in% argv & length(argv) == 3) {
+        if (!file.exists(argv[3])) {
+            cat(sprintf("Error: File '%s' does not exists!\n",argv[3]))
+        } else if (!grepl("Rd$",argv[3])) {
+            cat(sprintf("Error: File '%s' is not an Rd file!\n",argv[3]))
+        } else {
+            cat(tools::Rd2txt(argv[3]))
+        }
+    } else {
         Usage(argv)
     }
 }
