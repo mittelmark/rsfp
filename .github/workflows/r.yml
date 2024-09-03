@@ -23,15 +23,8 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      - name: Install packages required
-        run: |
-          install.packages(c("remotes", "rcmdcheck"))
-          remotes::install_deps(dependencies = TRUE)
-        shell: Rscript {0}
       - name: Process and Create Package Structure
         run: |
             Rscript rsfp-src.R --process rsfp-src.R
-  
-      - name: Check
-        run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
-        shell: Rscript {0}
+            make build pkg=rsfp
+            make check pkg=rsfp
