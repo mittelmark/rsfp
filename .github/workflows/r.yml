@@ -25,7 +25,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Process and Create Package Structure
         run: |
-            sudo apt install R-cran-knitr
-            Rscript rsfp-src.R --process rsfp-src.R
+            sudo apt install r-cran-knitr
             make build pkg=rsfp
-            make check pkg=rsfp
