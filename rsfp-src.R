@@ -196,6 +196,7 @@ Usage:
                              
     --build        PKGDIR  - build a package from the given package dir
     --check        PKGFILE - check the given package file (tar.gz file)
+    --check-man    PKGDIR  - check the created Rd files from the package
     --doc          RDFILE  - an Rd file usually from the man folder
     --install      PKGFILE - install the given package file (tar.gz file)
     
@@ -226,6 +227,26 @@ Usage:
 NP="
     --new-package  PKGNAME - create a new PKGNAME-src.R file
 "
+
+CheckRd <- function (pkg) {
+    pwd=getwd()
+    setwd(file.path(pkg,"man"))
+    rd_files <- list.files(pattern = "\\.Rd$", full.names = TRUE)
+    check_rd_file <- function(file) {
+        result <- tools::checkRd(file)
+        if (length(result) > 0) {
+            return(data.frame(file = file, messages = paste(result, collapse = "; ")))
+        }
+        return(NULL)
+    }
+    check_results <- do.call(rbind, lapply(rd_files, check_rd_file))
+    if (!is.null(check_results)) {
+        print(check_results)
+    } else {
+        cat("No issues found in the Rd files.\n")
+    }
+    setwd(pwd)
+}
 
 Usage <- function (argv) {
     if (!grepl("rsfp-src.",argv[1])) {
@@ -340,9 +361,10 @@ Main <- function (argv) {
             file.copy(vignette,vigdir)
         }
         cat("\nDone!\n\nYou can create and install a package file like this:\n\n")
-        cat(sprintf("  Rscript %s --build   %s\n",argv[1],PACKAGE))
-        cat(sprintf("  Rscript %s --check   %s_%s.tar.gz\n",argv[1], PACKAGE, VERSION))
-        cat(sprintf("  Rscript %s --install %s_%s.tar.gz\n\n", argv[1], PACKAGE, VERSION))
+        cat(sprintf("  Rscript %s --build     %s\n",argv[1],PACKAGE))
+        cat(sprintf("  Rscript %s --check-man %s\n",argv[1],PACKAGE))        
+        cat(sprintf("  Rscript %s --check     %s_%s.tar.gz\n",argv[1], PACKAGE, VERSION))
+        cat(sprintf("  Rscript %s --install   s%s_%s.tar.gz\n\n", argv[1], PACKAGE, VERSION))
     } else if ("--build" %in% argv & length(argv) == 3) {
         library(tools)
         tools::Rcmd(c("build", argv[3]))
@@ -352,6 +374,8 @@ Main <- function (argv) {
     } else if ("--install" %in% argv & length(argv) == 3) {
         library(tools)
         tools::Rcmd(c("INSTALL", argv[3]))
+    } else if ("--check-man" %in% argv) {
+        CheckRd(argv[3])
     }  else if ("--doc" %in% argv & length(argv) == 3) {
         if (!file.exists(argv[3])) {
             cat(sprintf("Error: File '%s' does not exists!\n",argv[3]))
