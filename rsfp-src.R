@@ -86,6 +86,7 @@
 #' }
 #' \value{returns the result of addition of x and y} 
 #' \examples{
+#' library(rsfp)
 #' x=1; y=2
 #' rsfp_add(x,y)
 #' } 
@@ -197,7 +198,9 @@ Usage:
     --build        PKGDIR  - build a package from the given package dir
     --check        PKGFILE - check the given package file (tar.gz file)
     --check-man    PKGDIR  - check the created Rd files from the package
-    --doc          RDFILE  - an Rd file usually from the man folder
+    --doc          RDFILE  - preview an Rd file usually from the man folder
+    --vignettex    SRCFILE - extract the examples as R-Markdown document to
+                             to pkg/vignettes/pkg-examples.Rmd    
     --install      PKGFILE - install the given package file (tar.gz file)
     
   ARGUMENTS
@@ -246,6 +249,50 @@ CheckRd <- function (pkg) {
         cat("No issues found in the Rd files.\n")
     }
     setwd(pwd)
+}
+
+ExtractEx <- function (srcfile) {
+    fin  = file(srcfile, "r")
+    fout = NULL
+    ex = FALSE
+    lastindent = 0;
+    while(length((line = readLines(fin,n=1)))>0) {
+        if (grepl("^#' Package:",line)) {
+            pkg = gsub("#' Package: +","",line)
+            rmdfile=paste(pkg,"-examples.Rmd",sep="")
+            fout = file(rmdfile,'w')
+            code=gsub("Introduction","EXAMPLES",gsub("tutorial","examples",VIGNETTE))
+            cat(sprintf(code,pkg,Sys.Date(),pkg),file=fout)
+        } else if (grepl("^#' \\\\name",line)) {
+            cat(paste("### ",gsub(".+\\{(.+)\\}","\\1",line),"\n"),file=fout)
+        } else if (grepl("^#' \\\\examples",line)) {
+            opt=""             
+            if (grepl("%options:",line)) {
+                opt=gsub(".+%options:","",line)
+            }
+            cat(sprintf("\n```{r%s}\n",opt),file=fout)
+            ex = TRUE
+        } else if (ex & lastindent < 3 & substr(line,1,4) == "#' }") {
+            cat("```\n\n",file=fout)                   
+            ex = FALSE
+        } else if (grepl("^#' \\\\title",line)) {
+            cat(paste("\n\n",gsub(".+\\{(.+)\\}","\\1",line),"\n",sep=""),file=fout)
+            ex = FALSE
+        } else if (ex) {
+            lastindent = nchar(gsub("#'([ ]+).*","\\1",line))
+            cat(gsub("\\\\%","%",gsub("#' ", "",line)),file=fout)  
+            cat("\n",file=fout)         
+        }
+    }
+    if (class(fout)[1] =="NULL") {
+        close(fout)
+    }
+    close(fin)
+    if (!dir.exists(file.path(pkg,"vignettes"))) {
+        dir.create(file.path(pkg,"vignettes"))
+    }
+    file.copy(rmdfile,file.path(pkg,"vignettes",rmdfile),overwrite=TRUE)
+    cat(sprintf("File: %s was written\n",file.path(pkg,"vignettes",rmdfile)))
 }
 
 Usage <- function (argv) {
@@ -376,7 +423,9 @@ Main <- function (argv) {
         tools::Rcmd(c("INSTALL", argv[3]))
     } else if ("--check-man" %in% argv) {
         CheckRd(argv[3])
-    }  else if ("--doc" %in% argv & length(argv) == 3) {
+    } else if ("--vignettex" %in% argv) {
+        ExtractEx(argv[3])
+    } else if ("--doc" %in% argv & length(argv) == 3) {
         if (!file.exists(argv[3])) {
             cat(sprintf("Error: File '%s' does not exists!\n",argv[3]))
         } else if (!grepl("Rd$",argv[3])) {

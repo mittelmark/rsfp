@@ -1,7 +1,7 @@
 ##-*- makefile -*-############################################################
 #  Created By    : Detlef Groth, University of Potsdam
 #  Created       : Wed Aug 28 16:08:38 2024
-#  Last Modified : <240829.1239>
+#  Last Modified : <240906.1110>
 #
 #  Description	 : Makefile for creating packages from the sfrp-src.R script
 #
@@ -25,6 +25,7 @@ new:
 	Rscript rsfp-src.R --new-package $(pkg)
 build:
 	Rscript $(pkg)-src.R --process $(pkg)-src.R
+	Rscript $(pkg)-src.R --vignettex $(pkg)-src.R	
 	Rscript $(pkg)-src.R --build $(pkg)
 	Rscript $(pkg)-src.R --check $(pkg)_$(VERSION).tar.gz
 
