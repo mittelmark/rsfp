@@ -166,9 +166,11 @@ include-before: |
     body { max-width: 900px; font-family: Candara, sans-serif; padding: 1em; margin: auto;}
     pre  { font-family: Consolas; monospaced; }
     pre, blockquote pre, #TOC {
-        font-size: 80%%;
+        font-size: 90%%;
         border-top:    0.1em #9ac solid;
         border-bottom: 0.1em #9ac solid;
+        padding: 10px;
+        background: #e9f9ff;
     }
     table { min-width: 400px; border-spacing: 5px;  border-collapse: collapse; }
     .title, .author, .date { text-align: center ; }
@@ -176,6 +178,25 @@ include-before: |
     a { color: #0655cc; text-decoration: none; }
     a:visited { color: #5506cc; }
     a:hover { color: #cc5506; }    
+    table {    
+        border-collapse: collapse;
+        border-bottom: 2px solid;
+        border-spacing: 5px;
+        min-width: 400px;
+    }
+    table thead tr th { 
+        background-color: #fde9d9;
+        text-align: left; 
+        padding: 10px;
+        border-top: 2px solid;
+        border-bottom: 2px solid;
+    }
+    table td { 
+        background-color: #fff9e9;
+
+        text-align: left; 
+        padding: 10px;
+    }
     </style>
     <center>some links on top</center>
 ---
@@ -265,12 +286,16 @@ ExtractEx <- function (srcfile) {
             cat(sprintf(code,pkg,Sys.Date(),pkg),file=fout)
         } else if (grepl("^#' \\\\name",line)) {
             cat(paste("### ",gsub(".+\\{(.+)\\}","\\1",line),"\n"),file=fout)
+             name=gsub("[^A-Za-z0-9]","_",gsub(".+\\{(.+)\\}.*","\\1",line))                      
         } else if (grepl("^#' \\\\examples",line)) {
             opt=""             
             if (grepl("%options:",line)) {
                 opt=gsub(".+%options:","",line)
             }
-            cat(sprintf("\n```{r%s}\n",opt),file=fout)
+            if (opt != "") {
+                opt=paste(",",opt,sep="")
+            }
+            cat(sprintf("\n```{r label=%s%s}\n",name,opt),file=fout)
             ex = TRUE
         } else if (ex & lastindent < 3 & substr(line,1,4) == "#' }") {
             cat("```\n\n",file=fout)                   
