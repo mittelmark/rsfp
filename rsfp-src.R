@@ -133,10 +133,13 @@ rsfp=new.env()
 #' Some more details about the function ...
 #' }
 #' \value{the result of the addition of the two numbers}
-#' \examples{
+#' \examples{ %options: eval=TRUE
 #' data(iris)
 #' rsfp$add(iris$Sepal.Length,iris$Sepal.Width)
 #' rsfp$add(1,2)
+#' \dontrun{
+#'  x=2
+#'  }  
 #' }
 #'
 #' \seealso{\link[rsfp:rsfp-package]{rsfp-package}}
@@ -276,6 +279,7 @@ ExtractEx <- function (srcfile) {
     fin  = file(srcfile, "r")
     fout = NULL
     ex = FALSE
+    dr = FALSE
     lastindent = 0;
     while(length((line = readLines(fin,n=1)))>0) {
         if (grepl("^#' Package:",line)) {
@@ -287,6 +291,9 @@ ExtractEx <- function (srcfile) {
         } else if (grepl("^#' \\\\name",line)) {
             cat(paste("### ",gsub(".+\\{(.+)\\}","\\1",line),"\n"),file=fout)
              name=gsub("[^A-Za-z0-9]","_",gsub(".+\\{(.+)\\}.*","\\1",line))                      
+        } else if (grepl("^#' \\\\title",line)) {
+            cat(paste("\n\n",gsub(".+\\{(.+)\\}","\\1",line),"\n",sep=""),file=fout)
+            ex = FALSE
         } else if (grepl("^#' \\\\examples",line)) {
             opt=""             
             if (grepl("%options:",line)) {
@@ -300,9 +307,10 @@ ExtractEx <- function (srcfile) {
         } else if (ex & lastindent < 3 & substr(line,1,4) == "#' }") {
             cat("```\n\n",file=fout)                   
             ex = FALSE
-        } else if (grepl("^#' \\\\title",line)) {
-            cat(paste("\n\n",gsub(".+\\{(.+)\\}","\\1",line),"\n",sep=""),file=fout)
-            ex = FALSE
+        } else if (ex & substr(line,1,11) == "#' \\dontrun") {
+            dr = TRUE
+        } else if (dr & substr(line,1,5) == "#'  }") {
+            dr = FALSE
         } else if (ex) {
             lastindent = nchar(gsub("#'([ ]+).*","\\1",line))
             cat(gsub("\\\\%","%",gsub("#' ", "",line)),file=fout)  
