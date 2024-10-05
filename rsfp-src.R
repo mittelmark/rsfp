@@ -4,7 +4,7 @@
 #' Type: Package
 #' Title: R single file dummy package
 #' Version: 0.0.1
-#' Date: 2024-08-28
+#' Date: 2024-10-05
 #' Author: Detlef Groth
 #' Authors@R: c(person("Detlef","Groth", role=c("aut", "cre"),
 #'                   email = "dgroth@uni-potsdam.de",
@@ -281,6 +281,7 @@ ExtractEx <- function (srcfile) {
     ex = FALSE
     dr = FALSE
     lastindent = 0;
+    usage=FALSE
     while(length((line = readLines(fin,n=1)))>0) {
         if (grepl("^#' Package:",line)) {
             pkg = gsub("#' Package: +","",line)
@@ -294,6 +295,21 @@ ExtractEx <- function (srcfile) {
         } else if (grepl("^#' \\\\title",line)) {
             cat(paste("\n\n",gsub(".+\\{(.+)\\}","\\1",line),"\n",sep=""),file=fout)
             ex = FALSE
+        } else if (grepl("^#' \\\\usage",line)) {
+            if (grepl("^#' \\\\usage\\{.+\\}",line)) {
+               cat(paste("\n\n__Usage:__\n\n```\n",gsub(".+\\{(.+)\\}","\\1",line),"\n```\n",sep=""),file=fout)
+            } else if (grepl("^#' \\\\usage\\{.+",line)) {
+               cat(paste("\n\n__Usage:__\n\n```{r eval=FALSE}\n",gsub(".+\\{(.+)","\\1",line),"\n",sep=""),file=fout)
+               usage=TRUE    
+            } else if (grepl("^#' \\\\usage\\{",line)) {
+               cat(paste("\n\n__Usage:__\n\n```{r eval=FALSE}\n",sep=""),file=fout)
+               usage=TRUE    
+            }
+        } else if (usage & grepl("^#' .*\\}",line)) {
+            cat("```\n",file=fout)                     
+            usage = FALSE
+        } else if (usage) {
+            cat(gsub("#' ","",line),"\n",file=fout)
         } else if (grepl("^#' \\\\examples",line)) {
             opt=""             
             if (grepl("%options:",line)) {
@@ -302,7 +318,7 @@ ExtractEx <- function (srcfile) {
             if (opt != "") {
                 opt=paste(",",opt,sep="")
             }
-            cat(sprintf("\n```{r label=%s%s}\n",name,opt),file=fout)
+            cat(sprintf("\n__Examples:__\n\n```{r label=%s%s}\n",name,opt),file=fout)
             ex = TRUE
         } else if (ex & lastindent < 3 & substr(line,1,4) == "#' }") {
             cat("```\n\n",file=fout)                   
