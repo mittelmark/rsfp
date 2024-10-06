@@ -74,9 +74,8 @@
 #' FILE: rsfp/man/rsfp-package.Rd
 #' \name{rsfp-package}
 #' \alias{rsfp-package}
-#' \title{rsfp-package - methods for the ...}
+#' \title{The rsfp-package - methods for the ...}
 #' \description{The rsfp package contains methods ...
-#'    ...
 #' }
 #' \details{
 #' This is a collection of useful functions shown ...
@@ -122,9 +121,9 @@ rsfp=new.env()
 #' \name{rsfp$add}
 #' \alias{rsfp$add}
 #' \alias{rsfp_add}
-#' \title{add two numbers}
-#' \usage{rsfp_add(x,y)}
+#' \title{Add two Numbers}
 #' \description{Return the result of addition for two numbers}
+#' \usage{rsfp_add(x,y)}
 #' \arguments{
 #'   \item{x}{a number}
 #'   \item{y}{a number}
@@ -282,6 +281,7 @@ ExtractEx <- function (srcfile) {
     dr = FALSE
     lastindent = 0;
     usage=FALSE
+    descr=FALSE
     while(length((line = readLines(fin,n=1)))>0) {
         if (grepl("^#' Package:",line)) {
             pkg = gsub("#' Package: +","",line)
@@ -293,7 +293,7 @@ ExtractEx <- function (srcfile) {
             cat(paste("### ",gsub(".+\\{(.+)\\}","\\1",line),"\n"),file=fout)
              name=gsub("[^A-Za-z0-9]","_",gsub(".+\\{(.+)\\}.*","\\1",line))                      
         } else if (grepl("^#' \\\\title",line)) {
-            cat(paste("\n\n",gsub(".+\\{(.+)\\}","\\1",line),"\n",sep=""),file=fout)
+            cat(paste("\n\n",gsub(".+\\{(.+)\\}","\\1",line),".\n",sep=""),file=fout)
             ex = FALSE
         } else if (grepl("^#' \\\\usage",line)) {
             if (grepl("^#' \\\\usage\\{.+\\}",line)) {
@@ -305,10 +305,24 @@ ExtractEx <- function (srcfile) {
                cat(paste("\n\n__Usage:__\n\n```{r eval=FALSE}\n",sep=""),file=fout)
                usage=TRUE    
             }
-        } else if (usage & grepl("^#' .*\\}",line)) {
-            cat("```\n",file=fout)                     
-            usage = FALSE
-        } else if (usage) {
+        } else if (grepl("^#' \\\\description",line)) {
+            if (grepl("^#' \\\\description\\{.+\\}",line)) {
+               cat(paste("\n\n",gsub(".+\\{(.+)\\}","\\1",line),"\n",sep=""),file=fout)
+            } else if (grepl("^#' \\\\description\\{.+",line)) {
+               cat(paste("\n\n",gsub(".+\\{(.+)","\\1",line),"\n",sep=""),file=fout)
+               descr=TRUE    
+            } else if (grepl("^#' \\\\description\\{",line)) {
+               cat(paste("\n\n",sep=""),file=fout)
+               descr=TRUE    
+            }
+        } else if ( (usage | descr)  & grepl("^#' .*\\}",line)) {
+            if (usage) {                                 
+                cat("```\n",file=fout)                     
+                usage = FALSE
+            } else {
+                descr = FALSE
+            }
+        } else if (usage | descr) {
             cat(gsub("#' ","",line),"\n",file=fout)
         } else if (grepl("^#' \\\\examples",line)) {
             opt=""             
