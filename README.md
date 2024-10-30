@@ -1,7 +1,7 @@
 ---
 title: rsfp - R single file package
 author: Detlef Groth
-date: 2024-08-29 09:49
+date: 2024-10-30 14:55
 include-before: |
     <style>
     body { max-width: 1000px; font-family: Candara, sans-serif; }
@@ -62,6 +62,8 @@ This process can be as well done within a R console like this:
 ```{r eval=FALSE}
 > library(tools) ## for calling Rcmd
 > ## file creation sbi-src.R should be done only one time
+> file="https://raw.githubusercontent.com/mittelmark/rsfp/refs/heads/main/rsfp-src.R"
+> download.file(file,"rsfp-src.R")
 > source("rsfp-src.R") 
 > Main(c("rsfp-src.R","--new-package","sbi"))
 > ## the lines below will be done again and again in development
