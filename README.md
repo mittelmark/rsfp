@@ -1,7 +1,7 @@
 ---
 title: rsfp - R single file package
 author: Detlef Groth
-date: 2024-10-30 14:55
+date: 2025-07-12 19:56
 include-before: |
     <style>
     body { max-width: 1000px; font-family: Candara, sans-serif; }
@@ -94,11 +94,13 @@ directory.
 ...
 
 #' FILE: rsfp/LICENSE
-#' YEAR: 2024
+#' YEAR: 2025
 #' COPYRIGHT HOLDER: Detlef Groth
 
 #' FILE: rsfp/NEWS
+#' 2025-07-12: Version 0.0.2 - Support for inst folder
 #' 2024-08-28: Version 0.0.1 - Initial Release
+
 ...
 
 #' FILE: rsfp/man/add.Rd
@@ -126,6 +128,21 @@ prefere to use an other name you just manually copy this file between calling
 for this going to work you must have the knitr package available and pandoc
 must be installed.
 
+## External Files
+
+Sometimes  you like to add data files or other  script  files. In  addition to
+inline  these  files  into  your  _xyz-src.R_  file you can as well  create in
+parallel  to your  _xyz-src.R_  file  a folder  _inst_ which is then copied
+during the build  process into your  package.  These files are then  installed
+together  with your  package. For  examples on how these files are  accessible
+look here [https://r-pkgs.org/data.html](https://r-pkgs.org/data.html)  mainly
+in chapter  7.3 (Raw Data). The main point is that  folders  within the _inst_
+folder  are  installed  finally  one  level  up in your  package.  So a folder
+_inst/extdata_ will be accessible as _extdata_, so via:
+
+```r
+system.file("extdata", FILENAME, package = "pkgname")
+```
 
 ## BACKGROUND
 
@@ -158,6 +175,13 @@ code  to  the  file  `sbi-src.R`  and  remove  the  example  function(s)  like
 environment  object,  called  `sbi`,  like the  package  name.  This  allows a
 flexible export of all functions for instance into a RDS file.
 
+## Authors
+
+- Detlef Groth, University of Potsdam (Author and Maintainer)
+
+## License
+
+MIT License see file [LICENSE](LICENSE).
 
 
 

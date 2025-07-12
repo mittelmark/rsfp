@@ -3,8 +3,8 @@
 #' Package: rsfp
 #' Type: Package
 #' Title: R single file dummy package
-#' Version: 0.0.1
-#' Date: 2024-10-05
+#' Version: 0.0.2
+#' Date: 2025-07-12
 #' Author: Detlef Groth
 #' Authors@R: c(person("Detlef","Groth", role=c("aut", "cre"),
 #'                   email = "dgroth@uni-potsdam.de",
@@ -25,10 +25,11 @@
 #' Collate: rsfp.R add.R
 
 #' FILE: rsfp/LICENSE
-#' YEAR: 2024
+#' YEAR: 2025
 #' COPYRIGHT HOLDER: Detlef Groth
 
 #' FILE: rsfp/NEWS
+#' 2025-07-12: Version 0.0.2 - Support for inst folder
 #' 2024-08-28: Version 0.0.1 - Initial Release
 
 #' FILE: rsfp/NAMESPACE
@@ -289,6 +290,18 @@ ExtractEx <- function (srcfile) {
             fout = file(rmdfile,'w')
             code=gsub("Introduction","EXAMPLES",gsub("tutorial","examples",VIGNETTE))
             cat(sprintf(code,pkg,Sys.Date(),pkg),file=fout)
+            if (dir.exists("inst")) {
+                if (!dir.exists(file.path(pkg,"inst"))) {
+                    cat("dir does not exists!")
+                    file.copy("inst",file.path(pkg,recursive=TRUE))
+                } else {
+                    for (dir in list.dirs("inst")) {
+                        cat("Copying dir:",dir,"\n")
+                        file.copy(dir,file.path(pkg),recursive=TRUE)
+                    }
+                }
+            }
+            cat("Files from inst folder copied into package folder!\n")
         } else if (grepl("^#' \\\\name",line)) {
             cat(paste("### ",gsub(".+\\{(.+)\\}","\\1",line),"\n"),file=fout)
              name=gsub("[^A-Za-z0-9]","_",gsub(".+\\{(.+)\\}.*","\\1",line))                      
