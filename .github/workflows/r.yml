@@ -33,5 +33,5 @@ jobs:
       - name: Upload Package Release files
         uses: actions/upload-artifact@v4
         with: 
-          name: rsfp_0.0.1
-          path: rsfp_0.0.1.tar.gz
+          name: rsfp_${{ env.VRS }}
+          path: rsfp_${{ env.VRS }}.tar.gz
