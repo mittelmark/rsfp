@@ -3,8 +3,8 @@
 #' Package: rsfp
 #' Type: Package
 #' Title: R single file dummy package
-#' Version: 0.0.2
-#' Date: 2025-07-12
+#' Version: 0.0.3
+#' Date: 2025-09-17
 #' Author: Detlef Groth
 #' Authors@R: c(person("Detlef","Groth", role=c("aut", "cre"),
 #'                   email = "dgroth@uni-potsdam.de",
@@ -29,6 +29,7 @@
 #' COPYRIGHT HOLDER: Detlef Groth
 
 #' FILE: rsfp/NEWS
+#' 2025-09-12: Version 0.0.3 - Support for images at the end of example block with %## ![](`r imgname`)
 #' 2025-07-12: Version 0.0.2 - Support for inst folder
 #' 2024-08-28: Version 0.0.1 - Initial Release
 
@@ -349,6 +350,10 @@ ExtractEx <- function (srcfile) {
             ex = TRUE
         } else if (ex & lastindent < 3 & substr(line,1,4) == "#' }") {
             cat("```\n\n",file=fout)                   
+            if (grepl("%## !\\[\\].+",line)) {
+                cat(gsub(".+## ","",line),file=fout)
+                cat("\n\n",file=fout)
+            }
             ex = FALSE
         } else if (ex & substr(line,1,11) == "#' \\dontrun") {
             dr = TRUE
@@ -497,7 +502,7 @@ Main <- function (argv) {
     } else if ("--install" %in% argv & length(argv) == 3) {
         library(tools)
         tools::Rcmd(c("INSTALL", argv[3]))
-    } else if ("--check-man" %in% argv) {
+    } else if ("--check-man" %in% argv) {s
         CheckRd(argv[3])
     } else if ("--vignettex" %in% argv) {
         ExtractEx(argv[3])
