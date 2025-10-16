@@ -3,8 +3,8 @@
 #' Package: rsfp
 #' Type: Package
 #' Title: R single file dummy package
-#' Version: 0.0.3
-#' Date: 2025-09-17
+#' Version: 0.0.4
+#' Date: 2025-10-16
 #' Author: Detlef Groth
 #' Authors@R: c(person("Detlef","Groth", role=c("aut", "cre"),
 #'                   email = "dgroth@uni-potsdam.de",
@@ -29,6 +29,7 @@
 #' COPYRIGHT HOLDER: Detlef Groth
 
 #' FILE: rsfp/NEWS
+#' 2025-10-16: Version 0.0.4 - Fixes for tag backgrounds in vignette stylesheet
 #' 2025-09-12: Version 0.0.3 - Support for images at the end of example block with %## ![](`r imgname`)
 #' 2025-07-12: Version 0.0.2 - Support for inst folder
 #' 2024-08-28: Version 0.0.1 - Initial Release
@@ -176,6 +177,8 @@ include-before: |
         padding: 10px;
         background: #e9f9ff;
     }
+    #TOC ul, #TOC ul li, #TOC ul li a,
+    code, .hljs-literal, .hljs-number, .hljs-comment, .hljs-keyword, .hljs-string {  background: #e9f9ff; }
     table { min-width: 400px; border-spacing: 5px;  border-collapse: collapse; }
     .title, .author, .date { text-align: center ; }
     #TOC > ul { margin-left: -20px;  list-style-type: square ; }
@@ -201,6 +204,8 @@ include-before: |
         text-align: left; 
         padding: 10px;
     }
+    table td strong { background-color: #fff9e9; }
+    p code { background: #f1f7fa ; font-size: 90%%;}
     </style>
     <center>some links on top</center>
 ---
