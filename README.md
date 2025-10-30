@@ -1,7 +1,7 @@
 ---
 title: rsfp - R single file package
 author: Detlef Groth
-date: 2025-10-19 08:19
+date: 2025-10-30 15:33
 include-before: |
     <style>
     body { max-width: 1000px; font-family: Candara, sans-serif; }
@@ -175,7 +175,18 @@ code  to  the  file  `sbi-src.R`  and  remove  the  example  function(s)  like
 environment  object,  called  `sbi`,  like the  package  name.  This  allows a
 flexible export of all functions for instance into a RDS file.
 
-## Authors
+## Changes
+
+- 2025-10-16: Version 0.0.5
+    - Bunny Net fonts Andika and Ubuntu Mono as default for vignette
+    - fixing inst folder install
+    - fixing spaces after filename in FILE: lines
+- 2025-10-16: Version 0.0.4 - Fixes for tag backgrounds in vignette stylesheet
+- 2025-09-12: Version 0.0.3 - Support for images at the end of example block with %## ![](`r imgname`)
+- 2025-07-12: Version 0.0.2 - Support for inst folder
+- 2024-08-28: Version 0.0.1 - Initial Release
+
+## Author
 
 - Detlef Groth, University of Potsdam (Author and Maintainer)
 
