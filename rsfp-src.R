@@ -3,8 +3,8 @@
 #' Package: rsfp
 #' Type: Package
 #' Title: R single file dummy package
-#' Version: 0.0.4
-#' Date: 2025-10-16
+#' Version: 0.0.5
+#' Date: 2025-10-30
 #' Author: Detlef Groth
 #' Authors@R: c(person("Detlef","Groth", role=c("aut", "cre"),
 #'                   email = "dgroth@uni-potsdam.de",
@@ -29,6 +29,9 @@
 #' COPYRIGHT HOLDER: Detlef Groth
 
 #' FILE: rsfp/NEWS
+#' 2025-10-16: Version 0.0.5 - Bunny Net fonts Andika and Ubuntu Mono as default for vignette
+#'                           - fixing inst folder install
+#'                           - fixing spaces after filename in FILE: lines
 #' 2025-10-16: Version 0.0.4 - Fixes for tag backgrounds in vignette stylesheet
 #' 2025-09-12: Version 0.0.3 - Support for images at the end of example block with %## ![](`r imgname`)
 #' 2025-07-12: Version 0.0.2 - Support for inst folder
@@ -168,6 +171,9 @@ vignette: >
    %%\\VignetteIndexEntry{%s tutorial}
 include-before: |
     <style>
+    @import url(https://fonts.bunny.net/css?family=andika:400,400i,700,700i|ubuntu-mono:400,400i,700,700i);
+    font-family: 'Andika', sans-serif;
+    font-family: 'Ubuntu Mono', monospace;
     body { max-width: 900px; font-family: Candara, sans-serif; padding: 1em; margin: auto;}
     pre  { font-family: Consolas; monospaced; }
     pre, blockquote pre, #TOC {
@@ -448,7 +454,7 @@ Main <- function (argv) {
         fout = NULL
         while(length((line = readLines(fin,n=1)))>0) {
             if (grepl("^#' +FILE:",line)) {
-                f = gsub("#' +FILE: +([^ ]+)","\\1",line)
+                f = gsub("#' +FILE: +([^ ]+) *","\\1",line)
                 if (!is.null(fout)) {
                     close(fout)
                     fout = NULL
@@ -497,7 +503,7 @@ Main <- function (argv) {
         cat(sprintf("  Rscript %s --build     %s\n",argv[1],PACKAGE))
         cat(sprintf("  Rscript %s --check-man %s\n",argv[1],PACKAGE))        
         cat(sprintf("  Rscript %s --check     %s_%s.tar.gz\n",argv[1], PACKAGE, VERSION))
-        cat(sprintf("  Rscript %s --install   s%s_%s.tar.gz\n\n", argv[1], PACKAGE, VERSION))
+        cat(sprintf("  Rscript %s --install   %s_%s.tar.gz\n\n", argv[1], PACKAGE, VERSION))
     } else if ("--build" %in% argv & length(argv) == 3) {
         library(tools)
         tools::Rcmd(c("build", argv[3]))

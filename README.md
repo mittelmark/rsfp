@@ -1,7 +1,7 @@
 ---
 title: rsfp - R single file package
 author: Detlef Groth
-date: 2025-07-12 19:56
+date: 2025-10-19 08:19
 include-before: |
     <style>
     body { max-width: 1000px; font-family: Candara, sans-serif; }
@@ -182,9 +182,4 @@ flexible export of all functions for instance into a RDS file.
 ## License
 
 MIT License see file [LICENSE](LICENSE).
-
-
-
-
-
 
